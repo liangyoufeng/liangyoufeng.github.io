@@ -5,9 +5,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="keywords" content="我的第一篇博客, 搞机の基地">
-    <meta name="description" content="关于你的描述……
-Quick StartCreate a new post$ hexo new &#34;My New Post&#34;
-安装常用软件和安装dockercat &gt; /etc/yum.repos.d/epel.repo &amp;lt;&amp;lt; E">
+    <meta name="description" content="这是一个基于centos7.9部署的kolla-openstack平台，适合用于学习……这篇文档是基于官方文档修改后的，如有问题请多多看日志谷歌。看准IP下手，还有账号密码版本为train版
+安装常用软件和安装dockercat &gt; /et">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -363,13 +362,9 @@ Quick StartCreate a new post$ hexo new &#34;My New Post&#34;
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/about/">
-                                <span class="chip bg-color">about</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
@@ -405,8 +400,7 @@ Quick StartCreate a new post$ hexo new &#34;My New Post&#34;
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>关于你的描述……</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+                <p>这是一个基于centos7.9部署的kolla-openstack平台，适合用于学习……<br>这篇文档是基于官方文档修改后的，如有问题请多多看日志谷歌。<br>看准IP下手，还有账号密码<br>版本为train版</p>
 <h3 id="安装常用软件和安装docker"><a href="#安装常用软件和安装docker" class="headerlink" title="安装常用软件和安装docker"></a>安装常用软件和安装docker</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">cat</span> <span class="token operator">></span> /etc/yum.repos.d/epel.repo <span class="token operator">&lt;&lt;</span> <span class="token string">EOF
 [epel]
 name=Extra Packages for Enterprise Linux 7 - \<span class="token variable">$basearch</span>
@@ -829,20 +823,6 @@ alembic <span class="token parameter variable">-c</span> skyline_apiserver/db/al
 <span class="token function">docker</span> <span class="token function">rm</span> <span class="token parameter variable">-f</span> skyline_bootstrap
 <span class="token comment">#启动skyline服务</span>
 <span class="token function">docker</span> run <span class="token parameter variable">-d</span> <span class="token parameter variable">--name</span> skyline <span class="token parameter variable">--restart</span><span class="token operator">=</span>always <span class="token parameter variable">-v</span> /etc/skyline/skyline.yaml:/etc/skyline/skyline.yaml <span class="token parameter variable">--net</span><span class="token operator">=</span>host 99cloud/skyline:latest<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-
-
-
-
-
-
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-
-
-
-
-
                 
             </div>
             <hr/>
@@ -905,11 +885,7 @@ alembic <span class="token parameter variable">-c</span> skyline_apiserver/db/al
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/about/">
-                                    <span class="chip bg-color">about</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
@@ -986,17 +962,18 @@ alembic <span class="token parameter variable">-c</span> skyline_apiserver/db/al
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2023/06/06/myblog-test/">
+                <a href="/2023/06/06/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="myblog-test">
+                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="我的第一篇博客">
                         
-                        <span class="card-title">myblog-test</span>
+                        <span class="card-title">我的第一篇博客</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1006,9 +983,9 @@ alembic <span class="token parameter variable">-c</span> skyline_apiserver/db/al
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-06-06
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-06-06
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -1017,6 +994,7 @@ alembic <span class="token parameter variable">-c</span> skyline_apiserver/db/al
                         </span>
                     </div>
                 </div>
+
                 
             </div>
         </div>
