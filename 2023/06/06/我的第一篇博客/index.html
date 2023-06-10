@@ -4,9 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="我的第一篇博客, 搞机の基地">
-    <meta name="description" content="这是一个基于centos7.9部署的kolla-openstack平台，适合用于学习……这篇文档是基于官方文档修改后的，如有问题请多多看日志谷歌。看准IP下手，还有账号密码版本为train版
-安装常用软件和安装dockercat &gt; /et">
+    <meta name="keywords" content="centos7.9部署的kolla-openstack官方教程, 搞机の基地">
+    <meta name="description" content="基于centos7.9部署的kolla-openstack虚拟化IAAS平台">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>我的第一篇博客 | 搞机の基地</title>
+    <title>centos7.9部署的kolla-openstack官方教程 | 搞机の基地</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
     <style>
@@ -346,12 +345,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/images/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AB%A0%E5%8D%9A%E5%AE%A2/kolla-img.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">我的第一篇博客</h1>
+                    <h1 class="description center-align post-title">centos7.9部署的kolla-openstack官方教程</h1>
                 </div>
             </div>
         </div>
@@ -373,12 +372,37 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">
+                                <span class="chip bg-color">云计算</span>
+                            </a>
+                        
+                            <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96%E6%8A%80%E6%9C%AF/">
+                                <span class="chip bg-color">虚拟化技术</span>
+                            </a>
+                        
+                            <a href="/tags/iaas/">
+                                <span class="chip bg-color">iaas</span>
+                            </a>
+                        
+                            <a href="/tags/kolla-openstack/">
+                                <span class="chip bg-color">kolla-openstack</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/" class="post-category">
+                                云计算
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -412,6 +436,7 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <p>这是一个基于centos7.9部署的kolla-openstack平台，适合用于学习……<br>这篇文档是基于官方文档修改后的，如有问题请多多看日志谷歌。<br>看准IP下手，还有账号密码<br>版本为train版</p>
+<p>下面是所用的docker服务<br><img src="/images/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AB%A0%E5%8D%9A%E5%AE%A2/docekr-images.jpg" alt="image-20230610174951605"></p>
 <h3 id="安装常用软件和安装docker"><a href="#安装常用软件和安装docker" class="headerlink" title="安装常用软件和安装docker"></a>安装常用软件和安装docker</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">cat</span> <span class="token operator">></span> /etc/yum.repos.d/epel.repo <span class="token operator">&lt;&lt;</span> <span class="token string">EOF
 [epel]
 name=Extra Packages for Enterprise Linux 7 - \<span class="token variable">$basearch</span>
@@ -896,7 +921,23 @@ alembic <span class="token parameter variable">-c</span> skyline_apiserver/db/al
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">
+                                    <span class="chip bg-color">云计算</span>
+                                </a>
+                            
+                                <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96%E6%8A%80%E6%9C%AF/">
+                                    <span class="chip bg-color">虚拟化技术</span>
+                                </a>
+                            
+                                <a href="/tags/iaas/">
+                                    <span class="chip bg-color">iaas</span>
+                                </a>
+                            
+                                <a href="/tags/kolla-openstack/">
+                                    <span class="chip bg-color">kolla-openstack</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -981,16 +1022,15 @@ alembic <span class="token parameter variable">-c</span> skyline_apiserver/db/al
                 <a href="/2023/06/06/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/">
                     <div class="card-image">
                         
+                        <img src="/images/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AB%A0%E5%8D%9A%E5%AE%A2/kolla-img.jpg" class="responsive-img" alt="centos7.9部署的kolla-openstack官方教程">
                         
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="我的第一篇博客">
-                        
-                        <span class="card-title">我的第一篇博客</span>
+                        <span class="card-title">centos7.9部署的kolla-openstack官方教程</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
+                            基于centos7.9部署的kolla-openstack虚拟化IAAS平台
                         
                     </div>
                     <div class="publish-info">
@@ -999,13 +1039,37 @@ alembic <span class="token parameter variable">-c</span> skyline_apiserver/db/al
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            Mr.Rootkit
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/" class="post-category">
+                                    云计算
+                                </a>
+                            
                             
                         </span>
                     </div>
                 </div>
 
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">
+                        <span class="chip bg-color">云计算</span>
+                    </a>
+                    
+                    <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96%E6%8A%80%E6%9C%AF/">
+                        <span class="chip bg-color">虚拟化技术</span>
+                    </a>
+                    
+                    <a href="/tags/iaas/">
+                        <span class="chip bg-color">iaas</span>
+                    </a>
+                    
+                    <a href="/tags/kolla-openstack/">
+                        <span class="chip bg-color">kolla-openstack</span>
+                    </a>
+                    
+                </div>
                 
             </div>
         </div>
