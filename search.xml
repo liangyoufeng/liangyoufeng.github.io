@@ -15,6 +15,27 @@
     </entry>
     
     
+    
+    <entry>
+      <title>我就是标题</title>
+      <link href="/2021/09/25/test-1/"/>
+      <url>/2021/09/25/test-1/</url>
+      
+        <content type="html"><![CDATA[<p>提示：<br>1.本课程基于kubernetes V1.25版本。<br>2.从V1.24开始，kubernetes默认容器运行时使用containerd，不再使用docker。</p><p> 为什么使用K3s </p><p>K3s 是一个轻量级的、完全兼容的 Kubernetes 发行版本。非常适合初学者。</p><p>K3s将所有 Kubernetes 控制平面组件都封装在单个二进制文件和进程中，文件大小&lt;100M,占用资源更小，且包含了kubernetes运行所需要的部分外部依赖和本地存储提供程序。</p><p>K3s提供了离线安装包，安装起来非常方便，可以避免安装过程中遇到各种网络资源访问问题。</p><p>K3s特别适用于边缘计算、物联网、嵌入式和ARM移动端场景。</p><p>提示：<br>K3s完全兼容kubernetes，二者的操作是一样的，使用k3s完全满足我们学习kubernetes的要求，课程的最后，我们再使用kubeadm安装一个完整的集群。</p><p> 离线安装K3s集群 </p><p>K3s集群分为k3s Server(控制平面)和k3s Agent(工作节点)。所有的组件都打包在单个二进制文件中。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> 我就是新的标签1 </tag>
+            
+            <tag> 老子是新的标签2 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
   
   
 </search>

@@ -408,10 +408,52 @@
             </div>
             <div class="tag-chips">
                 
+                
+                <a href="/tags/%E6%88%91%E5%B0%B1%E6%98%AF%E6%96%B0%E7%9A%84%E6%A0%87%E7%AD%BE1/" title="我就是新的标签1: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            data-tagname="我就是新的标签1" style="background-color: #F9EBEA;">我就是新的标签1
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/tags/%E8%80%81%E5%AD%90%E6%98%AF%E6%96%B0%E7%9A%84%E6%A0%87%E7%AD%BE2/" title="老子是新的标签2: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            data-tagname="老子是新的标签2" style="background-color: #F5EEF8;">老子是新的标签2
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
             </div>
         </div>
     </div>
 </div>
+
+    
+    <link rel="stylesheet" type="text/css" href="/libs/jqcloud/jqcloud.css">
+<style type="text/css">
+    #tag-wordcloud {
+        width: 100%;
+        height: 300px;
+    }
+</style>
+
+<div class="container" data-aos="fade-up">
+    <div class="card">
+        <div id="tag-wordcloud" class="card-content"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/libs/jqcloud/jqcloud-1.0.4.min.js"></script>
+<script type="text/javascript">
+    
+
+    $('#tag-wordcloud').jQCloud([{"text":"我就是新的标签1","weight":1,"link":"/tags/我就是新的标签1/"},{"text":"老子是新的标签2","weight":1,"link":"/tags/老子是新的标签2/"}], {
+        autoResize: true
+    });
+</script>
 
     
 
