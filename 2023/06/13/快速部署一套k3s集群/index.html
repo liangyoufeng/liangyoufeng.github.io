@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="centos7.9部署的kolla-openstack官方教程, 搞机の基地">
-    <meta name="description" content="基于centos7.9部署的kolla-openstack虚拟化IAAS平台">
+    <meta name="keywords" content="快速部署一套k3s集群, 搞机の基地">
+    <meta name="description" content="K3s 是一个轻量级的、完全兼容的 Kubernetes 发行版本。非常适合初学者。">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>centos7.9部署的kolla-openstack官方教程 | 搞机の基地</title>
+    <title>快速部署一套k3s集群 | 搞机の基地</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
     <style>
@@ -345,12 +345,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/images/centos7%E9%83%A8%E7%BD%B2kolla-openstack%E5%AE%98%E6%96%B9%E6%95%99%E7%A8%8B/top.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/images/%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2%E4%B8%80%E5%A5%97k3s%E9%9B%86%E7%BE%A4/top.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">centos7.9部署的kolla-openstack官方教程</h1>
+                    <h1 class="description center-align post-title">快速部署一套k3s集群</h1>
                 </div>
             </div>
         </div>
@@ -411,7 +411,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2023-06-12
+                    2023-06-13
                 </div>
                 
 
@@ -435,429 +435,167 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>这是一个基于centos7.9部署的kolla-openstack平台，适合用于学习……<br>这篇文档是基于官方文档修改后的，如有问题请多多看日志谷歌。<br>看准IP下手，还有账号密码<br>版本为train版</p>
-<h3 id="安装常用软件和安装docker"><a href="#安装常用软件和安装docker" class="headerlink" title="安装常用软件和安装docker"></a>安装常用软件和安装docker</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">cat</span> <span class="token operator">></span> /etc/yum.repos.d/epel.repo <span class="token operator">&lt;&lt;</span> <span class="token string">EOF
-[epel]
-name=Extra Packages for Enterprise Linux 7 - \<span class="token variable">$basearch</span>
-baseurl=https://mirrors.ustc.edu.cn/epel/7/\<span class="token variable">$basearch</span>
-failovermethod=priority
-enabled=1
-gpgcheck=0
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+                <p>提示：<br>1.本课程基于kubernetes V1.25版本。<br>2.从V1.24开始，kubernetes默认容器运行时使用containerd，不再使用docker。</p>
+<p> 为什么使用K3s </p>
+<p>K3s 是一个轻量级的、完全兼容的 Kubernetes 发行版本。非常适合初学者。</p>
+<p>K3s将所有 Kubernetes 控制平面组件都封装在单个二进制文件和进程中，文件大小&lt;100M,占用资源更小，且包含了kubernetes运行所需要的部分外部依赖和本地存储提供程序。</p>
+<p>K3s提供了离线安装包，安装起来非常方便，可以避免安装过程中遇到各种网络资源访问问题。</p>
+<p>K3s特别适用于边缘计算、物联网、嵌入式和ARM移动端场景。</p>
+<p>提示：<br>K3s完全兼容kubernetes，二者的操作是一样的，使用k3s完全满足我们学习kubernetes的要求，课程的最后，我们再使用kubeadm安装一个完整的集群。</p>
+<p> 离线安装K3s集群 </p>
+<p>K3s集群分为k3s Server(控制平面)和k3s Agent(工作节点)。所有的组件都打包在单个二进制文件中。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/svg/28915315/1663752618488-38bf777b-655d-4f1a-a176-5f2fbc50853b.svg" alt="how-it-works-k3s-revised.svg"></p>
+<p> 运行环境 </p>
+<p>●最低运行要求</p>
+<p>○内存: 512MB   &#x2F;   CPU: 1 核心</p>
+<p>●K3s版本：v1.25.0+k3s1</p>
+<p>●集群规划</p>
+<table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>IP地址</th>
+<th>配置</th>
+<th>系统</th>
+<th>网络</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>k8s - master</td>
+<td>192.168.56.109</td>
+<td>内存：2G CPU：2核 硬盘：20G</td>
+<td>CentOS 7.9.2009 最小化安装</td>
+<td>互  联  网:NAT网络 内部网络: Host-only</td>
+</tr>
+<tr>
+<td>k8s-worker1</td>
+<td>192.168.56.111</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>k8s-worker2</td>
+<td>192.168.56.112</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="1-准备工作"><a href="#1-准备工作" class="headerlink" title="1.准备工作"></a>1.准备工作</h2><p>需要在每台机器上执行如下命令：</p>
+<p>○关闭防火墙</p>
+<p>○设置selinux(需要联网)</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">systemctl disable firewalld <span class="token parameter variable">--now</span>
+
+yum <span class="token function">install</span> <span class="token parameter variable">-y</span> container-selinux selinux-policy-base
+
+yum <span class="token function">install</span> <span class="token parameter variable">-y</span> https://rpm.rancher.io/k3s/latest/common/centos/7/noarch/k3s-selinux-0.2-1.el7_8.noarch.rpm<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="2-下载安装包"><a href="#2-下载安装包" class="headerlink" title="2.下载安装包"></a>2.下载安装包</h2><p>下载安装脚本install.sh：<a target="_blank" rel="noopener" href="https://get.k3s.io/">https://get.k3s.io/</a></p>
+<p>下载k3s二进制文件：<a target="_blank" rel="noopener" href="https://github.com/k3s-io/k3s/releases/download/v1.25.0%2Bk3s1/k3s">k3s</a></p>
+<p>下载必要的image：<a target="_blank" rel="noopener" href="https://github.com/k3s-io/k3s/releases/download/v1.25.0%2Bk3s1/k3s-airgap-images-amd64.tar.gz">离线安装需要的image文件</a></p>
+<p>这些文件都可以在github仓库中获取：<a target="_blank" rel="noopener" href="https://github.com/k3s-io/k3s">https://github.com/k3s-io/k3s</a></p>
+<h2 id="3-执行安装脚本"><a href="#3-执行安装脚本" class="headerlink" title="3.执行安装脚本"></a>3.执行安装脚本</h2><p>1.将k3s二进制文件移动到&#x2F;usr&#x2F;local&#x2F;bin目录，并添加执行权限</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">cp</span> k3s /usr/local/bin
+<span class="token function">chmod</span> +x /usr/local/bin/k3s<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>2.将镜像移动到&#x2F;var&#x2F;lib&#x2F;rancher&#x2F;k3s&#x2F;agent&#x2F;images&#x2F;目录（无需解压）</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">mkdir</span> <span class="token parameter variable">-p</span> /var/lib/rancher/k3s/agent/images/
+
+<span class="token function">cp</span> ./k3s-airgap-images-amd64.tar.gz /var/lib/rancher/k3s/agent/images/<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>●在k8s-master节点执行：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">\</span>#修改权限
+
+<span class="token function">chmod</span> +x install.sh
+
+<span class="token punctuation">\</span>#离线安装
+
+<span class="token assign-left variable">INSTALL_K3S_SKIP_DOWNLOAD</span><span class="token operator">=</span>true ./install.sh
+
+<span class="token punctuation">\</span>#安装完成后，查看节点状态
+
+kubectl get <span class="token function">node</span>
+
+<span class="token punctuation">\</span>#查看token
+
+<span class="token function">cat</span> /var/lib/rancher/k3s/server/node-token
+
+<span class="token punctuation">\</span>#K10c4b79481685b50e4bca2513078f4e83b62d1d0b5f133a8a668b65c8f9249c53e::server:bf7b63be7f3471838cbafa12c1a1964d<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<p>●在k8s-worker1和k8s-worker2节点执行:</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">INSTALL_K3S_SKIP_DOWNLOAD</span><span class="token operator">=</span>true <span class="token punctuation">\</span>
+<span class="token assign-left variable">K3S_URL</span><span class="token operator">=</span>https://192.168.56.109:6443 <span class="token punctuation">\</span>
+<span class="token assign-left variable">K3S_TOKEN</span><span class="token operator">=</span>K1012bdc3ffe7a5d89ecb125e56c38f9fe84a9f9aed6db605f7698fa744f2f2f12f::server:fdf33f4921dd607cadf2ae3c8eaf6ad9 <span class="token punctuation">\</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="4-更改为国内源"><a href="#4-更改为国内源" class="headerlink" title="4.更改为国内源"></a>4.更改为国内源</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">cat</span> <span class="token operator">></span> /etc/rancher/k3s/registries.yaml <span class="token operator">&lt;&lt;</span> <span class="token string">EOF
+mirrors:
+  docker.io:
+    endpoint:
+      - "https://docker.mirrors.ustc.edu.cn/"
+EOF</span>
+<span class="token comment">#master</span>
+systemctl restart k3s
+<span class="token comment">#node</span>
+systemctl restart k3s-agent<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>强制跳转https</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">要看你是需要全局https跳转，还是具体某个ingress做跳转。
+如需全局HTTPS跳转，直接在helm chart （/var/lib/rancher/k3s/server/manifests/traefik-config.yaml）里面加入 <span class="token punctuation">(</span>参考： Traefik <span class="token number">2</span>: Permanent http to https redirect <span class="token punctuation">(</span>pet2cattle.com<span class="token punctuation">)</span> <span class="token number">7</span><span class="token punctuation">)</span> 或者新版路径文件/var/lib/rancher/k3s/server/manifests/traefik.yaml
+
+  valuesContent: <span class="token operator">|</span>-
+    ports:
+      web:
+        redirectTo: websecure ←
+如果只需为某个ingress进行https跳转，则需先创建一个自动跳转的traefik middleware
+参考： Set up Traefik Kubernetes Ingress <span class="token keyword">for</span> HTTP and HTTPS with redirect to HTTPS <span class="token punctuation">(</span>aqibrahman.com<span class="token punctuation">)</span> <span class="token number">6</span>
+
+上面方式只是临时的重启k3s后会恢复原文件，可以创建配置文件让k3s启动读取配置,永久生效，注意是全局跳转，traefik.yaml文件名跟每个版本环境命名不太一样要注意路径里的/var/lib/rancher/k3s/server/manifests/traefik-xxxx.yaml
+ <span class="token function">cat</span> <span class="token operator">></span> /etc/rancher/k3s/traefik.yaml <span class="token operator">&lt;&lt;</span> <span class="token string">EOF
+   valuesContent: |-
+    ports:
+      web:
+        redirectTo: websecure
 EOF</span>
 
-yum <span class="token function">install</span> <span class="token parameter variable">-y</span> python-devel libffi-devel gcc openssl-devel libselinux-python lvm2 <span class="token function">vim</span>
-yum <span class="token function">install</span> <span class="token parameter variable">-y</span> chrony <span class="token function">vim</span> net-tools bash-completion ipset ipvsadm conntrack jq iptables <span class="token function">curl</span> sysstat libseccomp <span class="token function">wget</span> yum-utils device-mapper-persistent-data lvm2 <span class="token function">git</span> ntpdate
-yum <span class="token parameter variable">-y</span> <span class="token function">install</span> iptables-services <span class="token operator">&amp;&amp;</span> systemctl start iptables <span class="token operator">&amp;&amp;</span> systemctl <span class="token builtin class-name">enable</span> iptables <span class="token operator">&amp;&amp;</span> iptables <span class="token parameter variable">-F</span> <span class="token operator">&amp;&amp;</span> <span class="token function">service</span> iptables save
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect
+  namespace: example
+
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: <span class="token boolean">true</span>
+然后在ingress yaml的annotation中进行引用
+
+metadata:
+  <span class="token punctuation">..</span>.
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: example-redirect@kubernetescrd<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+
+
+<p> 排查错误 :</p>
+<p>如果安装或启动不成功，可能有以下几个原因：</p>
+<p>1时间不统一</p>
+<p>2IP有冲突，请为每个主机分配不同的IP</p>
+<p>3主机名(hostname)重复，请为每个主机设置不同的主机名</p>
+<p>4网卡的MAC有冲突，复制虚拟机时，请为所有网卡重新生产MAC地址</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2022/png/28915315/1667876066165-4e69b63d-2ff1-4ba8-a8ae-0a5566d97859.png" alt="image.png"></p>
+<p>参考文档：</p>
+<p><a target="_blank" rel="noopener" href="https://k3s.io/">https://k3s.io/</a></p>
+<p><a target="_blank" rel="noopener" href="https://rancher.com/docs/k3s/latest/en/">https://rancher.com/docs/k3s/latest/en/</a></p>
+<p><a target="_blank" rel="noopener" href="https://rancher.com/docs/k3s/latest/en/quick-start/">https://rancher.com/docs/k3s/latest/en/quick-start/</a></p>
+<p><a target="_blank" rel="noopener" href="https://rancher.com/docs/k3s/latest/en/installation/airgap/">https://rancher.com/docs/k3s/latest/en/installation/airgap/</a></p>
 
-
-<span class="token function">cat</span> <span class="token operator">></span> /etc/sysconfig/network-scripts/ifcfg-ens33 <span class="token operator">&lt;&lt;</span> <span class="token string">EOF
-TYPE=Ethernet
-BOOTPROTO=static
-NAME=ens33
-DEVICE=ens33
-ONBOOT=yes
-IPADDR=192.168.233.41
-NETMASK=255.255.255.0
-GATEWAY=192.168.233.2
-DNS1=114.114.114.114
-EOF</span>
-
-<span class="token function">cat</span> <span class="token operator">></span> /etc/sysconfig/network-scripts/ifcfg-ens34 <span class="token operator">&lt;&lt;</span> <span class="token string">EOF
-TYPE=Ethernet
-BOOTPROTO=static
-NAME=ens34
-DEVICE=ens34
-ONBOOT=yes
-IPADDR=172.168.233.41
-NETMASK=255.255.255.0
-EOF</span>
-
-<span class="token function">cat</span> <span class="token operator">></span> /etc/sysconfig/network-scripts/ifcfg-ens37 <span class="token operator">&lt;&lt;</span> <span class="token string">EOF
-TYPE=Ethernet
-BOOTPROTO=none
-NAME=ens37
-DEVICE=ens37
-ONBOOT=yes
-EOF</span>
-
-
-systemctl stop NetworkManager <span class="token operator">&amp;&amp;</span> systemctl disable NetworkManager
-
-systemctl disable firewalld <span class="token operator">&amp;&amp;</span> systemctl stop firewalld
-
-<span class="token function">sed</span> <span class="token parameter variable">-i</span> <span class="token string">'s/^SELINUX=enforcing$/SELINUX=disabled/'</span> /etc/selinux/config <span class="token operator">&amp;&amp;</span> setenforce <span class="token number">0</span>
-<span class="token comment">#同步时间</span>
-ntpdate <span class="token parameter variable">-u</span> ntp.aliyun.com
-hwclock <span class="token parameter variable">-w</span>
-
-yum <span class="token function">install</span> docker-ce-19.03.15-3.el7 <span class="token parameter variable">-y</span>
-systemctl daemon-reload <span class="token operator">&amp;&amp;</span> systemctl <span class="token builtin class-name">enable</span> <span class="token function">docker</span> <span class="token operator">&amp;&amp;</span> systemctl restart <span class="token function">docker</span>
-
-<span class="token function">cat</span> <span class="token operator">>></span> /etc/docker/daemon.json <span class="token operator">&lt;&lt;</span> <span class="token string">EOF
-&#123;
-"registry-mirrors": [
-"https://registry.docker-cn.com",
-"http://hub-mirror.c.163.com",
-"https://docker.mirrors.ustc.edu.cn"
-]
-&#125;
-EOF</span>
-
-<span class="token function">mkdir</span> <span class="token parameter variable">-p</span> /etc/systemd/system/docker.service.d
-<span class="token function">cat</span> <span class="token operator">>></span> /etc/systemd/system/docker.service.d/kolla.conf <span class="token operator">&lt;&lt;</span> <span class="token string">EOF
-[Service]
-MountFlags=shared
-EOF</span>
-
-systemctl daemon-reload <span class="token operator">&amp;&amp;</span> systemctl <span class="token builtin class-name">enable</span> <span class="token function">docker</span> <span class="token operator">&amp;&amp;</span> systemctl restart <span class="token function">docker</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h3 id="安装kolla-ansible使用虚拟方式"><a href="#安装kolla-ansible使用虚拟方式" class="headerlink" title="安装kolla-ansible使用虚拟方式"></a>安装kolla-ansible使用虚拟方式</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">
-yum <span class="token function">install</span> python-devel libffi-devel gcc openssl-devel libselinux-python <span class="token parameter variable">-y</span>
-
-yum <span class="token function">install</span> python-virtualenv <span class="token parameter variable">-y</span>
-
-virtualenv /path/to/virtualenv
-<span class="token builtin class-name">source</span> /path/to/virtualenv/bin/activate
-
-pip <span class="token function">install</span> <span class="token parameter variable">-U</span> pip
-pip <span class="token function">install</span> <span class="token parameter variable">-U</span> setuptools
-pip <span class="token function">install</span> <span class="token string">'ansible&lt;2.10'</span>
-pip <span class="token function">install</span> pbr
-pip <span class="token function">install</span> kolla-ansible
-
-<span class="token function">sudo</span> <span class="token function">mkdir</span> <span class="token parameter variable">-p</span> /etc/kolla
-<span class="token function">sudo</span> <span class="token function">chown</span> <span class="token environment constant">$USER</span><span class="token builtin class-name">:</span><span class="token environment constant">$USER</span> /etc/kolla
-
-<span class="token function">cp</span> <span class="token parameter variable">-r</span> /path/to/virtualenv/share/kolla-ansible/etc_examples/kolla/* /etc/kolla
-<span class="token builtin class-name">cd</span> /root/
-<span class="token function">cp</span> /path/to/virtualenv/share/kolla-ansible/ansible/inventory/* <span class="token builtin class-name">.</span>
-
-<span class="token comment"># 对ansible进行配置</span>
-<span class="token function">mkdir</span> /etc/ansible/
-<span class="token function">cat</span> <span class="token operator">></span> /etc/ansible/ansible.cfg <span class="token operator">&lt;&lt;</span> <span class="token string">EOF
-[defaults]
-# 跳过首次连接验证提示
-host_key_checking=False
-# 利用管道替换默认的拷贝模块
-pipelining=True
-# 执行时的并发数
-forks=100
-EOF</span>
-
-<span class="token comment">#测试通不通，需要自行准备ssh密钥和免密登录</span>
-ansible <span class="token parameter variable">-i</span> all-in-one all <span class="token parameter variable">-m</span> <span class="token function">ping</span>
-
-<span class="token comment">#我这里使用了lvm作为cinder后端，如果使用了ceph，不需要这一步，或者不使用cinder</span>
-pvcreate /dev/sdb
-pvcreate /dev/sdc
-vgcreate cinder-volumes /dev/sdb /dev/sdc<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-
-
-<h3 id="开始配置kolla-ansible"><a href="#开始配置kolla-ansible" class="headerlink" title="开始配置kolla-ansible"></a>开始配置kolla-ansible</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#生成随机密码</span>
-kolla-genpwd
-
-<span class="token comment">#修改admin密码</span>
-<span class="token function">sed</span> <span class="token parameter variable">-i</span> <span class="token string">'s/^keystone_admin_password.*/keystone_admin_password: tstack@123/'</span> /etc/kolla/passwords.yml
-
-<span class="token comment">#添加配置文件</span>
-<span class="token function">cat</span> <span class="token operator">>></span> /etc/kolla/globals.yml <span class="token operator">&lt;&lt;</span> <span class="token string">EOF
-kolla_base_distro: "centos"
-kolla_install_type: "source"
-openstack_release: "train"
-kolla_internal_vip_address: "192.168.233.240"
-neutron_tenant_network_types: "vxlan,vlan,flat"
-network_interface: "ens33"
-#tunnel_interface: "ens34"
-neutron_external_interface: "ens37"
-enable_cinder: "yes"
-#enable_cinder_backup: "yes"
-enable_cinder_backend_lvm: "yes"
-enable_cinder_backend_lvm: "no"
-nova_compute_virt_type: "qemu"
-EOF</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-
-
-<h3 id="提示技巧"><a href="#提示技巧" class="headerlink" title="提示技巧"></a>提示技巧</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#提示技巧</span>
-kolla-ansible <span class="token parameter variable">-i</span> INVENTORY deploy用于部署和启动所有 Kolla 器皿。
-
-kolla-ansible <span class="token parameter variable">-i</span> INVENTORY destroy用于清理容器和 群集中的卷。
-
-kolla-ansible <span class="token parameter variable">-i</span> INVENTORY mariadb_recovery用于恢复 完全停止MariaDB集群。
-
-kolla-ansible <span class="token parameter variable">-i</span> INVENTORY prechecks用于检查是否所有要求 在部署每个 OpenStack 服务之前满足。
-
-kolla-ansible <span class="token parameter variable">-i</span> INVENTORY post-deploy用于在部署时执行部署后 节点以获取管理员 OpenRC 文件。
-
-kolla-ansible <span class="token parameter variable">-i</span> INVENTORY pull用于拉取容器的所有映像。
-
-kolla-ansible <span class="token parameter variable">-i</span> INVENTORY reconfigure用于重新配置 OpenStack 服务。
-
-kolla-ansible <span class="token parameter variable">-i</span> INVENTORY upgrade用于升级现有的OpenStack 环境。
-
-kolla-ansible <span class="token parameter variable">-i</span> INVENTORY stop用于停止正在运行的容器。
-
-kolla-ansible <span class="token parameter variable">-i</span> INVENTORY deploy-containers用于检查和 必要的更新容器，而不生成配置。
-
-kolla-ansible <span class="token parameter variable">-i</span> INVENTORY prune-images用于修剪孤立的 Docker 主机上的图像。
-
-kolla-ansible <span class="token parameter variable">-i</span> INVENTORY1 <span class="token parameter variable">-i</span> INVENTORY2 <span class="token punctuation">..</span>.可以有多个库存 通过传递 OR 命令行选项多个来指定 次。这对于在多个环境之间共享配置非常有用。 任何常见配置都可以在 中设置，并且可以 用于设置特定于环境的详细信息。--inventory-iINVENTORY1INVENTORY2
-
-kolla-ansible <span class="token parameter variable">-i</span> INVENTORY gather-facts用于收集 Ansible 事实， 例如，填充事实缓存。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-
-
-
-
-<h3 id="开始部署kolla-ansible"><a href="#开始部署kolla-ansible" class="headerlink" title="开始部署kolla-ansible"></a>开始部署kolla-ansible</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 1.部署依赖的引导服务器:安装一些软件比如docker之类的包</span>
-kolla-ansible <span class="token parameter variable">-i</span> ./all-in-one bootstrap-servers
-
-<span class="token comment">#建议先将镜像pull下楼再部署，因为不知道镜像要pull多久，要注意，镜像pull过程中，会改变/etc/docker/daemon.json配置文件，导致上面配置的国内源无法使用，一直卡状态，需要执行一遍后，注意观察网络流量是否很低或者配置文件是否发生改变，然后改回去，ctrl+c掉，重新pull。</span>
-<span class="token comment">###########################################改回去docker配置文件####################</span>
-<span class="token function">cat</span> <span class="token operator">>></span> /etc/docker/daemon.json <span class="token operator">&lt;&lt;</span> <span class="token string">EOF
-&#123;
-"registry-mirrors": [
-"https://registry.docker-cn.com",
-"http://hub-mirror.c.163.com",
-"https://docker.mirrors.ustc.edu.cn"
-]
-&#125;
-EOF</span>
-<span class="token comment">#########################################改回去docker配置文件#######################</span>
-kolla-ansible <span class="token parameter variable">-i</span> ./all-in-one pull
-
-<span class="token comment"># 2.对主机进行部署前检查</span>
-kolla-ansible <span class="token parameter variable">-i</span> ./all-in-one prechecks
-
-<span class="token comment">#注意：在进行第二步命令时如果报错，请执行以下命令进行规避。</span>
-<span class="token comment"># 退出虚拟环境</span>
-deactivate
-<span class="token comment"># 安装新版pip，下载比较慢可以在windows用idm下载在拷贝进去执行python get-pip.py</span>
-<span class="token function">curl</span>  https://bootstrap.pypa.io/pip/2.7/get-pip.py <span class="token operator">|</span> python
-<span class="token comment"># 设置pip加速</span>
-pip config <span class="token builtin class-name">set</span> global.index-url  https://mirrors.aliyun.com/pypi/simple/
-<span class="token comment"># 使用pip安装一些python包</span>
-pip <span class="token function">install</span> requests
-pip <span class="token function">install</span> <span class="token assign-left variable">docker</span><span class="token operator">==</span><span class="token number">4.4</span>.4
-pip <span class="token function">install</span> websocket-client<span class="token operator">==</span><span class="token number">0.59</span>.0
-
-<span class="token comment">#然后重新执行kolla-ansible -i ./all-in-one prechecks检查环境是否通过</span>
-kolla-ansible <span class="token parameter variable">-i</span> ./all-in-one prechecks
-<span class="token comment">#通过后再执行部署</span>
-kolla-ansible <span class="token parameter variable">-i</span> ./all-in-one deploy
-
-<span class="token comment"># 3.开始部署OpenStack</span>
-kolla-ansible <span class="token parameter variable">-i</span> ./all-in-one deploy
-
-部署完成后生成rc文件
-kolla-ansible <span class="token parameter variable">-i</span> ./all-in-one  post-deploy
-
-<span class="token comment">#安装客户端</span>
-yum <span class="token function">install</span> centos-release-openstack-train  <span class="token parameter variable">-y</span>
-yum makecache fast 
-yum <span class="token function">install</span> python-openstackclient openstack-selinux <span class="token parameter variable">-y</span>
-
-<span class="token builtin class-name">source</span> /etc/kolla/admin-openrc.sh
-<span class="token function">cp</span> /etc/kolla/admin-openrc.sh /root/
-
-<span class="token function">mkdir</span> <span class="token parameter variable">-p</span> /opt/cache/files/
-<span class="token comment">#上传镜像到/opt/cache/files/目录，因为脚本下载的太慢了，自己用idm下载上传进去，固定版本cirros-0.4.0-x86_64-disk.img</span>
-<span class="token comment">#验证初始化环境，修改桥接网络，为自己桥接网段，比如我这里nat是管理网192.168.233.0/24，桥接是外部网：192.168.31.0/24</span>
-<span class="token function">vim</span> /path/to/virtualenv/share/kolla-ansible/init-runonce
-<span class="token assign-left variable">EXT_NET_CIDR</span><span class="token operator">=</span><span class="token variable">$&#123;EXT_NET_CIDR<span class="token operator">:-</span>'192.168.31.0<span class="token operator">/</span>24'&#125;</span>
-<span class="token assign-left variable">EXT_NET_RANGE</span><span class="token operator">=</span><span class="token variable">$&#123;EXT_NET_RANGE<span class="token operator">:-</span>'start=192.168.31.150<span class="token operator">,</span>end=192.168.31.199'&#125;</span>
-<span class="token assign-left variable">EXT_NET_GATEWAY</span><span class="token operator">=</span><span class="token variable">$&#123;EXT_NET_GATEWAY<span class="token operator">:-</span>'192.168.31.1'&#125;</span>
-
-<span class="token comment">#运行测试，会创建很多东西</span>
-<span class="token function">sh</span> /path/to/virtualenv/share/kolla-ansible/init-runonce<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-
-
-<h3 id="安装skyline"><a href="#安装skyline" class="headerlink" title="安装skyline"></a>安装skyline</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#</span>
-<span class="token function">rm</span> <span class="token parameter variable">-rf</span> /tmp/skyline <span class="token operator">&amp;&amp;</span> <span class="token function">mkdir</span> /tmp/skyline <span class="token operator">&amp;&amp;</span> <span class="token function">mkdir</span> /var/log/skyline <span class="token operator">&amp;&amp;</span> <span class="token function">mkdir</span> /etc/skyline
-
-<span class="token comment">#创建skyline数据库和访问密码，mysql密码在 cat /etc/kolla/passwords.yml | grep -w database_password</span>
-
-<span class="token assign-left variable">tmp_mysql_password</span><span class="token operator">=</span><span class="token variable"><span class="token variable">`</span><span class="token function">cat</span> /etc/kolla/passwords.yml <span class="token operator">|</span> <span class="token function">grep</span> <span class="token parameter variable">-w</span> database_password<span class="token operator">|</span><span class="token function">awk</span> <span class="token string">'&#123;print $2&#125;'</span><span class="token variable">`</span></span>
-
-<span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> mariadb mysql <span class="token parameter variable">-uroot</span> -p<span class="token variable">$tmp_mysql_password</span> <span class="token parameter variable">-e</span> <span class="token string">"CREATE DATABASE IF NOT EXISTS skyline DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"</span>
-<span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> mariadb mysql <span class="token parameter variable">-uroot</span> -p<span class="token variable">$tmp_mysql_password</span> <span class="token parameter variable">-e</span> <span class="token string">"GRANT ALL PRIVILEGES ON skyline.* TO 'skyline'@'localhost' IDENTIFIED BY 'Skyline_123';"</span>
-<span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> mariadb mysql <span class="token parameter variable">-uroot</span> -p<span class="token variable">$tmp_mysql_password</span> <span class="token parameter variable">-e</span> <span class="token string">"GRANT ALL PRIVILEGES ON skyline.* TO 'skyline'@'%'  IDENTIFIED BY 'Skyline_123';"</span>
-
-<span class="token comment">#查看当前环境oc配置文件，并将变量赋予进入keystone容器中</span>
-<span class="token function">cat</span> /etc/kolla/admin-openrc.sh
-<span class="token builtin class-name">export</span> <span class="token assign-left variable">OS_PROJECT_DOMAIN_NAME</span><span class="token operator">=</span>Default
-<span class="token builtin class-name">export</span> <span class="token assign-left variable">OS_USER_DOMAIN_NAME</span><span class="token operator">=</span>Default
-<span class="token builtin class-name">export</span> <span class="token assign-left variable">OS_PROJECT_NAME</span><span class="token operator">=</span>admin
-<span class="token builtin class-name">export</span> <span class="token assign-left variable">OS_TENANT_NAME</span><span class="token operator">=</span>admin
-<span class="token builtin class-name">export</span> <span class="token assign-left variable">OS_USERNAME</span><span class="token operator">=</span>admin
-<span class="token builtin class-name">export</span> <span class="token assign-left variable">OS_PASSWORD</span><span class="token operator">=</span>tstack@123
-<span class="token builtin class-name">export</span> <span class="token assign-left variable">OS_AUTH_URL</span><span class="token operator">=</span>http://192.168.233.240:35357/v3
-<span class="token builtin class-name">export</span> <span class="token assign-left variable">OS_INTERFACE</span><span class="token operator">=</span>internal
-<span class="token builtin class-name">export</span> <span class="token assign-left variable">OS_ENDPOINT_TYPE</span><span class="token operator">=</span>internalURL
-<span class="token builtin class-name">export</span> <span class="token assign-left variable">OS_IDENTITY_API_VERSION</span><span class="token operator">=</span><span class="token number">3</span>
-<span class="token builtin class-name">export</span> <span class="token assign-left variable">OS_REGION_NAME</span><span class="token operator">=</span>RegionOne
-<span class="token builtin class-name">export</span> <span class="token assign-left variable">OS_AUTH_PLUGIN</span><span class="token operator">=</span>password
-<span class="token comment">#进入keystone容器，创建skyline用户和密码，加入到admin角色中</span>
-<span class="token function">docker</span> <span class="token builtin class-name">exec</span> <span class="token parameter variable">-it</span> keystone <span class="token function">bash</span>
-openstack user create <span class="token parameter variable">--domain</span> default <span class="token parameter variable">--password</span> Skyline_123 skyline
-openstack role <span class="token function">add</span> <span class="token parameter variable">--project</span> <span class="token function">service</span> <span class="token parameter variable">--user</span> skyline admin
-
-
-<span class="token comment">#退出容器回到外面控制执行，注意更改IP和密码</span>
-<span class="token function">cat</span> <span class="token operator">></span> /etc/skyline/skyline.yaml <span class="token operator">&lt;&lt;</span><span class="token string">EOF
-default:
-  access_token_expire: 3600
-  access_token_renew: 1800
-  cors_allow_origins: []
-  database_url: 'mysql://skyline:Skyline_123@192.168.233.240:3306/skyline'
-  debug: false
-  log_dir: ./log
-  prometheus_basic_auth_password: ''
-  prometheus_basic_auth_user: ''
-  prometheus_enable_basic_auth: false
-  prometheus_endpoint: http://192.168.233.240:9091
-  secret_key: aCtmgbcUqYUy_HNVg5BDXCaeJgJQzHJXwqbXr0Nmb2o
-  session_name: session
-developer:
-  show_raw_sql: false
-openstack:
-  keystone_url: http://192.168.233.240:35357/v3
-  default_region: RegionOne
-  interface_type: internal
-  system_user_name: skyline
-  system_user_password: Skyline_123
-  base_domains:
-  - heat_user_domain
-  base_roles:
-  - keystone_system_admin
-  - keystone_system_reader
-  - keystone_project_admin
-  - keystone_project_member
-  - keystone_project_reader
-  - nova_system_admin
-  - nova_system_reader
-  - nova_project_admin
-  - nova_project_member
-  - nova_project_reader
-  - cinder_system_admin
-  - cinder_system_reader
-  - cinder_project_admin
-  - cinder_project_member
-  - cinder_project_reader
-  - glance_system_admin
-  - glance_system_reader
-  - glance_project_admin
-  - glance_project_member
-  - glance_project_reader
-  - neutron_system_admin
-  - neutron_system_reader
-  - neutron_project_admin
-  - neutron_project_member
-  - neutron_project_reader
-  - heat_system_admin
-  - heat_system_reader
-  - heat_project_admin
-  - heat_project_member
-  - heat_project_reader
-  - placement_system_admin
-  - placement_system_reader
-  - panko_system_admin
-  - panko_system_reader
-  - panko_project_admin
-  - panko_project_member
-  - panko_project_reader
-  - ironic_system_admin
-  - ironic_system_reader
-  - octavia_system_admin
-  - octavia_system_reader
-  - octavia_project_admin
-  - octavia_project_member
-  - octavia_project_reader
-  default_region: RegionOne
-  extension_mapping:
-    fwaas_v2: neutron_firewall
-    vpnaas: neutron_vpn
-  interface_type: public
-  keystone_url: http://192.168.233.240:35357/v3/
-  nginx_prefix: /api/openstack
-  reclaim_instance_interval: 604800
-  service_mapping:
-    baremetal: ironic
-    compute: nova
-    database: trove
-    identity: keystone
-    image: glance
-    load-balancer: octavia
-    network: neutron
-    object-store: swift
-    orchestration: heat
-    placement: placement
-    volumev3: cinder
-  system_admin_roles:
-  - admin
-  - system_admin
-  system_project: 'service'
-  system_project_domain: 'Default'
-  system_reader_roles:
-  - system_reader
-  system_user_domain: Default
-  system_user_name: skyline
-  system_user_password: 'Skyline_123'
-setting:
-  base_settings:
-  - flavor_families
-  - gpu_models
-  - usb_models
-  flavor_families:
-  - architecture: x86_architecture
-    categories:
-    - name: general_purpose
-      properties: []
-    - name: compute_optimized
-      properties: []
-    - name: memory_optimized
-      properties: []
-    - name: high_clock_speed
-      properties: []
-  - architecture: heterogeneous_computing
-    categories:
-    - name: compute_optimized_type_with_gpu
-      properties: []
-    - name: visualization_compute_optimized_type_with_gpu
-      properties: []
-  gpu_models:
-  - nvidia_t4
-  usb_models:
-  - usb_c
-EOF</span>
-
-<span class="token comment">#允许skyline引导依赖</span>
-<span class="token function">docker</span> run <span class="token parameter variable">-d</span> <span class="token parameter variable">--name</span> skyline_bootstrap <span class="token parameter variable">-e</span> <span class="token assign-left variable">KOLLA_BOOTSTRAP</span><span class="token operator">=</span><span class="token string">""</span> <span class="token parameter variable">-v</span> /etc/skyline/skyline.yaml:/etc/skyline/skyline.yaml <span class="token parameter variable">--net</span><span class="token operator">=</span>host 99cloud/skyline:latest
-
-<span class="token comment">#查看日志</span>
-<span class="token function">docker</span> logs skyline_bootstrap
-<span class="token comment">#查看最后日志是否为exit 0，如果不是请检查</span>
-<span class="token punctuation">[</span>root@allinone cinder<span class="token punctuation">]</span><span class="token comment"># docker logs skyline_bootstrap</span>
-+ <span class="token builtin class-name">echo</span> <span class="token string">'/usr/local/bin/gunicorn -c /etc/skyline/gunicorn.py skyline_apiserver.main:app'</span>
-+ <span class="token builtin class-name">mapfile</span> <span class="token parameter variable">-t</span> CMD
-++ <span class="token function">tail</span> /run_command
-++ <span class="token function">xargs</span> <span class="token parameter variable">-n</span> <span class="token number">1</span>
-+ <span class="token punctuation">[</span><span class="token punctuation">[</span> <span class="token parameter variable">-n</span> <span class="token number">0</span> <span class="token punctuation">]</span><span class="token punctuation">]</span>
-+ <span class="token builtin class-name">cd</span> /skyline-apiserver/
-+ <span class="token function">make</span> db_sync
-alembic <span class="token parameter variable">-c</span> skyline_apiserver/db/alembic/alembic.ini upgrade <span class="token function">head</span>
-<span class="token number">2022</span>-12-14 05:22:08.626 <span class="token operator">|</span> INFO     <span class="token operator">|</span> alembic.runtime.migration:__init__:204 - Context impl MySQLImpl.
-<span class="token number">2022</span>-12-14 05:22:08.626 <span class="token operator">|</span> INFO     <span class="token operator">|</span> alembic.runtime.migration:__init__:207 - Will assume non-transactional DDL.
-<span class="token number">2022</span>-12-14 05:22:08.633 <span class="token operator">|</span> INFO     <span class="token operator">|</span> alembic.runtime.migration:run_migrations:618 - Running upgrade  -<span class="token operator">></span> 000, init
-+ <span class="token builtin class-name">exit</span> <span class="token number">0</span>
-
-<span class="token comment">#删除引导依赖</span>
-<span class="token function">docker</span> <span class="token function">rm</span> <span class="token parameter variable">-f</span> skyline_bootstrap
-<span class="token comment">#启动skyline服务</span>
-<span class="token function">docker</span> run <span class="token parameter variable">-d</span> <span class="token parameter variable">--name</span> skyline <span class="token parameter variable">--restart</span><span class="token operator">=</span>always <span class="token parameter variable">-v</span> /etc/skyline/skyline.yaml:/etc/skyline/skyline.yaml <span class="token parameter variable">--net</span><span class="token operator">=</span>host 99cloud/skyline:latest<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
                 
             </div>
             <hr/>
@@ -883,7 +621,7 @@ alembic <span class="token parameter variable">-c</span> skyline_apiserver/db/al
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://goitcloud.eu.org/2023/06/12/centos7%E9%83%A8%E7%BD%B2kolla-openstack%E5%AE%98%E6%96%B9%E6%95%99%E7%A8%8B/">https://goitcloud.eu.org/2023/06/12/centos7%E9%83%A8%E7%BD%B2kolla-openstack%E5%AE%98%E6%96%B9%E6%95%99%E7%A8%8B/</a>
+                    <a href="https://goitcloud.eu.org/2023/06/13/%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2%E4%B8%80%E5%A5%97k3s%E9%9B%86%E7%BE%A4/">https://goitcloud.eu.org/2023/06/13/%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2%E4%B8%80%E5%A5%97k3s%E9%9B%86%E7%BE%A4/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -1013,9 +751,10 @@ alembic <span class="token parameter variable">-c</span> skyline_apiserver/db/al
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2023/06/13/%E5%BF%AB%E9%80%9F%E9%83%A8%E7%BD%B2%E4%B8%80%E5%A5%97k3s%E9%9B%86%E7%BE%A4/">
                     <div class="card-image">
@@ -1032,9 +771,9 @@ alembic <span class="token parameter variable">-c</span> skyline_apiserver/db/al
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-06-13
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-06-13
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -1047,6 +786,7 @@ alembic <span class="token parameter variable">-c</span> skyline_apiserver/db/al
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -1074,7 +814,7 @@ alembic <span class="token parameter variable">-c</span> skyline_apiserver/db/al
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
                 <a href="/2023/06/12/centos7%E9%83%A8%E7%BD%B2kolla-openstack%E5%AE%98%E6%96%B9%E6%95%99%E7%A8%8B/">
@@ -1107,7 +847,6 @@ alembic <span class="token parameter variable">-c</span> skyline_apiserver/db/al
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
